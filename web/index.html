@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crea Apps con Google Sheets</title>
+    <meta name="description"
+        content="Aprende a crear aplicaciones web seguras y potentes usando Google Apps Script y Google Sheets sin conocimientos técnicos previos.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+
+    <nav class="navbar">
+        <div class="logo"><i class="ph-fill ph-sparkle"></i> Crea Apps con Google Sheets</div>
+    </nav>
+
+    <header class="hero">
+        <h1 class="hero-title">Construye Apps Increíbles con <span class="text-gradient">Google Sheets</span></h1>
+        <p class="hero-subtitle">El manual de supervivencia para crear aplicaciones web seguras, rápidas y profesionales
+            dictándole a la IA (System Prompt), sin ser un experto en código.</p>
+        <button class="cta-button"
+            onclick="document.getElementById('content').scrollIntoView({behavior: 'smooth'})">Comenzar la
+            Aventura</button>
+    </header>
+
+    <main id="content" class="container">
+
+        <section class="glass-card mb-large reveal">
+            <h2><i class="ph ph-buildings"></i> La Regla de Oro: Las Tres Capas</h2>
+            <p>Toda app profesional se divide en tres partes. Piensa en un restaurante:</p>
+
+            <div class="grid-3">
+                <div class="feature-box">
+                    <div class="icon"><i class="ph ph-palette"></i></div>
+                    <h3>1. Frontend (El Comedor)</h3>
+                    <p>Es lo que ve el usuario (botones, colores). <strong>Regla:</strong> Nunca toca la base de datos
+                        directamente. Solo sirve para mostrar cosas bonitas y pedir información.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon"><i class="ph ph-brain"></i></div>
+                    <h3>2. Backend (El Mesero/Chef)</h3>
+                    <p>Aquí vive <em>Google Apps Script</em>. Es el intermediario. Revisa que el pedido sea válido,
+                        prepara la información y la anota. Es el <strong>único</strong> que habla con la base de datos.
+                    </p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon"><i class="ph ph-floppy-disk"></i></div>
+                    <h3>3. Base de Datos (La Bóveda)</h3>
+                    <p>Aquí está tu <em>Google Sheet</em>. Guarda toda la información de manera segura. Solo el Backend
+                        (Apps Script) tiene las llaves para entrar.</p>
+                </div>
+            </div>
+
+            <div class="alert-box info-box mt-md">
+                <strong><i class="ph-fill ph-lightbulb"></i> Tip de comunicación:</strong> El Frontend y el Backend se
+                hablan mediante mensajes (`fetch`). ¡Siempre usa formato de texto simple (`text/plain`) para evitar
+                errores locos de conexión (CORS)!
+            </div>
+        </section>
+
+        <section class="glass-card mb-large reveal delay-1">
+            <h2><i class="ph-fill ph-shield-check"></i> Guarda tus Secretos como un Ninja</h2>
+            <p>Si tu app usa contraseñas o tokens de seguridad, <strong>nunca los escribas directamente en el
+                    código</strong> ni los dejes visibles en el Google Sheet.</p>
+            <ul class="styled-list">
+                <li>Usa las "Propiedades del Script" (la caja fuerte secreta de Google) para guardar claves importantes.
+                </li>
+                <li>Nunca guardes contraseñas reales. Pídele a tu IA que use "Hash SHA-256 + SALT" (básicamente,
+                    convertir la contraseña en un texto inentendible).</li>
+                <li>Si das "llaves de acceso" (tokens), dales fecha de caducidad (ej. 7 días).</li>
+            </ul>
+        </section>
+
+        <section class="glass-card mb-large reveal delay-2">
+            <h2><i class="ph-fill ph-traffic-signal"></i> El Filtro Anti-Basura (Validación)</h2>
+            <p>Los usuarios a veces (sin querer o queriendo) envían información equivocada. Tu backend no debe confiar
+                en nadie.</p>
+            <div class="grid-2 mt-md">
+                <div class="feature-box">
+                    <h3>Rechaza lo Gigante</h3>
+                    <p>Si alguien envía demasiada información (más de 10KB), bloquea el mensaje inmediatamente antes de
+                        leerlo.</p>
+                </div>
+                <div class="feature-box">
+                    <h3>Cuidado con las Fórmulas</h3>
+                    <p>Si un usuario escribe "=", "+", "-" o "@" al principio, añade un apóstrofo (') antes. Así evitas
+                        que Google Sheets intente ejecutarlo como una fórmula maliciosa.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card mb-large reveal">
+            <h2><i class="ph-fill ph-boxing-glove"></i> Defensa contra Ataques y Tráfico</h2>
+            <p>Tu app puede volverse popular (o alguien puede intentar adivinar contraseñas). Protégete así:</p>
+            <ul class="styled-list">
+                <li><strong>El Cadenero (Fuerza Bruta):</strong> Si alguien falla su contraseña 5 veces seguidas,
+                    bloquéalo 15 minutos usando `CacheService`.</li>
+                <li><strong>Fila Ordenada:</strong> Si dos personas guardan datos al mismo milisegundo, usa
+                    `LockService` para que se atiendan uno por uno y no se rompa la hoja.</li>
+                <li><strong>Memoria Rápida:</strong> Usa `CacheService` para guardar respuestas comunes (como una tabla
+                    de posiciones) por 60 segundos. ¡Google te lo agradecerá y tu app volará!</li>
+            </ul>
+        </section>
+
+        <section class="glass-card mb-large reveal delay-1">
+            <h2><i class="ph-fill ph-rocket-launch"></i> Reglas Finales de Publicación</h2>
+            <div class="publish-steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <p><strong>Cerebro al Backend:</strong> Los cálculos de puntos o reglas importantes NUNCA van en el
+                        frontend. Si el usuario puede verlo, puede hacer trampa.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <p><strong>Errores Discretos:</strong> Si algo falla, muéstrale al usuario un mensaje amigable
+                        ("Oops, algo salió mal"). Nunca muestres los códigos de error reales del sistema.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <p><strong>Nueva Versión:</strong> Al publicar cambios, siempre elige <em>"Nueva
+                            implementación"</em> en Apps Script. ¡Nunca sobreescribas una existente! Y borra las
+                        versiones viejas.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card mb-large reveal">
+            <h2><i class="ph-fill ph-video-camera"></i> Mira un Ejemplo en Acción</h2>
+            <p>Descubre el tipo de aplicaciones que puedes construir siguiendo estas reglas de seguridad y arquitectura:
+            </p>
+            <div class="video-wrapper mt-md"
+                style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                    src="https://www.youtube.com/embed/-qiZmHE7gS8" title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <section class="glass-card mb-large reveal delay-2">
+            <h2><i class="ph-fill ph-robot"></i> Tu Flujo de Trabajo (Cómo usar esto)</h2>
+            <p>¡Ojo! Aquí <strong>no hay código para descargar</strong>. Lo que tienes es un <strong>"System
+                    Prompt"</strong> (instrucciones maestras para la IA). Así es como lo usas:</p>
+            <div class="publish-steps mt-md">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <p><strong>Copia el molde:</strong> <a href="https://github.com/PabloGGuizar/apps-with-google-sheets/blob/main/system-prompt-apps-script.md" target="_blank" style="color: var(--primary); font-weight: bold; text-decoration: underline;">Descarga o abre el archivo system-prompt-apps-script.md aquí</a> y copia todo su contenido.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <p><strong>Pégalo en tu IA:</strong> Ve a ChatGPT, Claude o Gemini, pega el texto y dile: <em>"Actúa
+                            siguiendo estrictamente este System Prompt. Ahora, hazme el código para una app de [tu idea]
+                            usando Google Sheets."</em></p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <p><strong>Pega el código en Google:</strong> Toma el código (seguro y profesional) que te generará
+                        la IA, ve a <code>script.google.com</code> y pégalo allí. ¡Magia!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card cta-section reveal delay-1">
+            <h2>¿Listo para programar con IA?</h2>
+            <p>Ya sabes el secreto. Ve, copia el System Prompt y empieza a construir cosas increíbles.</p>
+            <button class="cta-button outline" id="openModalBtn">¡Entendido, vamos a vibecodear!</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>Hecho con <i class="ph-fill ph-heart" style="color: #ff4b4b;"></i> para Vibe Coders. Mantén tus apps seguras.
+        </p>
+    </footer>
+
+    <!-- Modal -->
+    <div id="customModal" class="modal-overlay">
+        <div class="modal-content glass-card">
+            <span class="close-modal">&times;</span>
+            <h2><i class="ph-fill ph-rocket-launch"></i> ¡Último recordatorio!</h2>
+            <p>No olvides decirle a tu IA <strong>qué tipo de app</strong> quieres construir justo después de pegarle el
+                System Prompt.</p>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 1rem;">Ejemplo: <em>"Haz una app para
+                    registrar asistencia de mis estudiantes..."</em></p>
+            <button class="cta-button" id="closeModalBtn" style="margin-top: 2rem; width: 100%;">¡Manos a la
+                obra!</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
